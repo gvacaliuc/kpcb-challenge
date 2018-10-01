@@ -1,0 +1,212 @@
+% arara: pdflatex: { shell: true }
+% arara: pdflatex: { shell: true }
+%-------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%-------------------------------------------------------------------------------
+
+\documentclass[paper=letter, fontsize=12pt]{article}
+
+\usepackage[english]{babel} % English language/hyphenation
+\usepackage{amsmath,amsfonts,amsthm} % Math packages
+\usepackage[section]{placeins}  % prevent figures / eqns / tables 
+                                % from slipping out of section.
+\usepackage{sectsty} % Allows customizing section commands
+\allsectionsfont{\centering \normalfont\scshape} % Make all sections centered, 
+                                                 % the default font and small 
+                                                 % caps 
+
+\usepackage{fancyhdr} % Custom headers and footers
+\usepackage{hyperref}
+
+% algorithms
+\usepackage{algorithm}
+\usepackage[compatible]{algpseudocode}
+
+\usepackage{ragged2e} % Text alignment
+\usepackage[margin=1in]{geometry} % 1 inch margins
+\usepackage{tikz} % Not always necessary, but allows very customizable 
+                  % figures / object placement
+\usepackage{enumitem} % get more out of enumerate
+
+% Header and Footers
+\pagestyle{fancyplain} % Makes all pages in the document conform to the custom 
+                       % headers and footers
+\fancyhead{} % No page header
+\fancyfoot[L]{} % Empty left footer
+\fancyfoot[C]{} % Empty center footer
+\fancyfoot[R]{\thepage} % Page numbering for right footer
+\renewcommand{\headrulewidth}{0pt} % Remove header underlines
+\renewcommand{\footrulewidth}{0pt} % Remove footer underlines
+\setlength{\headheight}{13.6pt} % Customize the height of the header
+
+% Number all figs, eqns, and tables within the section
+\numberwithin{equation}{section} % Number equations within sections 
+\numberwithin{figure}{section} % Number figures within sections 
+\numberwithin{table}{section} % Number tables within sections 
+
+\setlength\parindent{4pt} % 4pt indentation for paragraphs
+\setlength{\parskip}{\baselineskip} % adds some spacing in between paragraphs
+
+\newcommand{\horrule}[1]{\rule{\linewidth}{#1}} % Create horizontal rule command
+                                                % with 1 argument of height
+\newcommand{\fancyline}{\\ \horrule{0.5pt} \vspace{0.1cm}} % fancy line to put
+                                                           % under questions
+
+%  Some commands for algorithm environments                                            
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Output:}}
+\renewcommand{\algorithmicforall}{\textbf{for each}}
+\newcommand{\algorithmiccontinue}{\textbf{continue}}
+\algloopdefx{RETURN}[1][]{\textbf{return} #1}
+
+% useful math shortcuts
+\newcommand{\lagr}[1]{\mathcal{L}\left( #1 \right)}
+\newcommand{\expval}[1]{E\left[#1\right]}
+\newcommand{\var}[1]{\text{var}\left(#1\right)}
+\renewcommand{\det}[1]{\text{det}\left(#1\right)}
+\newcommand{\diag}[1]{\text{diag}\left[#1\right]}
+
+% Code Cells
+  \usepackage{minted}
+  \usepackage{mdframed}
+
+% Colors for minted package
+\definecolor{codecellbg}{rgb}{0.950,0.950,0.950}
+\definecolor{riceblue}{rgb}{0.000,0.141,0.416}
+\definecolor{ricegray}{rgb}{0.369,0.376,0.384}
+
+\mdfdefinestyle{inputcell}{%
+ hidealllines=true,leftline=true,
+ skipabove=12pt,skipbelow=0pt,
+ innertopmargin=0.4em,%
+ innerbottommargin=0.4em,%
+ innerrightmargin=0.5em,%
+ rightmargin=0.5em,%
+ innerleftmargin=0.5em,%
+ leftmargin=0.5em,%
+ linecolor=riceblue,linewidth=3pt,%
+ backgroundcolor=codecellbg,%
+}
+
+% sets up the minted styles, for now hardcodes python.
+\setminted{mathescape,
+           numbersep=5pt,
+           autogobble=true,
+           breaklines,
+           framesep=2mm}
+
+\BeforeBeginEnvironment{minted}{\begin{mdframed}[style=inputcell]}
+\AfterEndEnvironment{minted}{\end{mdframed}}
+
+%-------------------------------------------------------------------------------
+%	TITLE SECTION
+%-------------------------------------------------------------------------------
+
+\title{	
+\normalfont \normalsize 
+\textsc{rice university} \\ [25pt]
+\horrule{0.5pt} \\[0.4cm] % Thin top horizontal rule
+\huge Solitaire Design Documentation \\ % The assignment title
+\horrule{2pt} \\[0.5cm] % Thick bottom horizontal rule
+}
+
+\author{Gabriel Vacaliuc}
+
+\begin{document}
+
+\maketitle
+
+%-------------------------------------------------------------------------------
+%   CONTENT
+%-------------------------------------------------------------------------------
+
+\section{how to play}
+
+\subsection{compiling and running}
+
+The code was written for the Java 10 JVM, so you'll need a Java 10 JRE to run 
+the provided JAR and a Java 10 JDK to compile the code.  I've packaged the 
+game with \href{https://gradle.org/}{gradle}, so you can build test and run the
+game like so:
+
+\begin{minted}{bash}
+$ ./gradlew build
+
+$ ./gradlew test
+
+$ ./gradlew play
+\end{minted}
+
+\subsection{playing}
+
+Rules for Solitaire can be
+\href{https://www.bicyclecards.com/how-to-play/solitaire/}{found online}.
+Note that the deck of cards is the ``Talon'', the area with the 7 stacks of
+cards is the ``Tableau'', and the areas where you try to place the cards are
+``Foundations''.
+
+There consist of 6 valid actions in our game:
+\begin{itemize}
+  \item Advance the Talon: Press enter at the command prompt.
+  \item Restart the game: Enter \texttt{restart} or \texttt{r}.
+  \item Move a card from the Talon to the Tableau: Enter \texttt{t -> \#},
+    where \texttt{\#} is the number of the tableau pile to move to. Note that
+    you can also write \texttt{talon} rather than abbreviating.
+  \item Move a card from a pile on the Tableau to another pile: Enter
+    \texttt{\# -> \#}, where the two \texttt{\#}'s represent the numbers of the
+    piles to move to/from.
+  \item Move a card from the Talon to the Foundations: Enter \texttt{t -> f}.
+    Note that you can also write \texttt{foundation} rather than abbreviating.
+  \item Move a card from the Tableau to the Foundations: Enter \texttt{\# -> f},
+    where \texttt{\#} is the number of the Tableau pile to move the card from.
+\end{itemize}
+
+Note that in the full game of Solitaire you can also move cards from the
+Foundations to the Tableau.  This was not implemented.
+
+\section{design choices}
+
+I designed the game using a Model-View-Controller architecture.  The Model
+consists of the card, deck, tableau, and foundation implementations as well as
+their interactions.  The View is responsible for parsing the player's input as
+well as displaying the board.  The view contains an adapter interface that is
+able to communicate with the model.  This adapter is made concrete in the
+controller, so that we can close over our reference of the model.
+
+I chose to implement the game functionally - that is, the data structures in
+the game do not mutate; a pile of cards would return a new pile of cards after
+some were picked up from the pile.  This allows for simpler testing and
+implementation, as you don't have to worry about the state of the game changing
+after method calls.  I also made extensive use of \texttt{java.util.Optional},
+which reduces the risk of null pointer exceptions.  Rather than returning null
+or throwing an exception upon an error, e.g. a player moves a red card onto a
+red card, I'd return an empty \texttt{Optional} to indicate that an invalid
+move was played.
+
+\section{rationale behind tooling}
+
+I used Java 10 because I'm comfortable in Java, it's easy to refactor, and I
+enjoy Java development, for the most part.  I don't have any real reasons for
+using Java 10 over Java 8 or 9.  
+
+I used the standard libraries in Java as well as Google Guava.  I got used to
+using it this past summer at Two Sigma and it's quite nice to have.  
+
+I implemented tests using JUnit because I have experience using it, and it's a
+nice interface.  Although someone \textit{just} turned my attention to
+\href{https://github.com/ncredinburgh/QuickTheories}{QuickTheories}, and it
+looks like a very impressive testing framework...
+
+I used gradle for my build system because I have experience using it, it's
+generally easier to setup than \href{https://bazel.build/}{Bazel}, and I don't
+need Bazel's blazing fast builds since this is a tiny project.  I've also been
+using gradle for all my Java work this year, so it was a pretty easy decision.
+
+\section{references}
+
+\begin{itemize}
+  \item Google Guava: \href{https://github.com/google/guava}{https://github.com/google/guava}
+  \item JUnit: \href{https://github.com/junit-team/junit4}{https://github.com/junit-team/junit4}
+\end{itemize}
+
+\end{document}
