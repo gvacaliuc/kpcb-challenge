@@ -1,0 +1,71 @@
+plugins {
+    id 'java'
+    id 'idea'
+    //id 'net.ltgt.errorprone' version '0.0.11'
+    id 'com.github.sherter.google-java-format' version '0.7.1'
+}
+
+
+group 'com.github.gvacaliuc'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'com.google.guava:guava:26.0-jre'
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+// Enforces Java 10 Compatibility
+allprojects {
+    tasks.withType(JavaCompile) {
+        sourceCompatibility = JavaVersion.VERSION_1_10
+        targetCompatibility = JavaVersion.VERSION_1_10
+    }
+}
+
+// Setup Compilation Options
+compileJava {
+    options.fork = true
+    options.incremental = true
+}
+
+// turn on all warnings, except for the ones that are annoying or unhelpful
+tasks.withType(JavaCompile) {
+    options.compilerArgs << "-Xlint:all" << "-Xlint:-serial" << "-Xlint:-processing"
+}
+
+// set Java flags to use more memory than default so we avoid unnecessary stack
+// overflows
+task run(type: JavaExec) {
+    jvmArgs = ['-Xss1m', '-Xms256m'] // 1MB stack, 256MB heap
+}
+
+idea {
+    project {
+        jdkName = '1.10'
+        languageLevel = '1.10'
+    }
+}
+
+// Javadocs
+task docs (type: Javadoc) {
+    source = sourceSets.main.allJava
+    classpath = sourceSets.main.compileClasspath
+    destinationDir = file("${rootDir}/doc")
+    //options.showFromPrivate()
+    options.addBooleanOption('html5', true)
+}
+
+// Cleans the "doc" folder where our javadocs are generated
+clean.doFirst {
+    delete "${rootDir}/doc"
+}
+
+task play (dependsOn: classes, type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = "com.github.gvacaliuc.solitaire.game.GameController"
+    standardInput = System.in
+}
