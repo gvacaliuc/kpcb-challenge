@@ -1,33 +1,33 @@
 package com.github.gvacaliuc.solitaire.model;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 @RunWith(JUnit4.class)
-public class TableuTest {
+public class TableauTest {
 
-  public static final Tableu table1 =
-      Tableu.of(
-          TableuCardPile.of(
+  public static final Tableau table1 =
+      Tableau.of(
+          TableauCardPile.of(
               5,
               Card.of(Card.Suit.CLUBS, Card.Rank.KING),
               Card.of(Card.Suit.DIAMONDS, Card.Rank.QUEEN),
               Card.of(Card.Suit.CLUBS, Card.Rank.JACK),
               Card.of(Card.Suit.DIAMONDS, Card.Rank.TEN),
               Card.of(Card.Suit.CLUBS, Card.Rank.NINE)),
-          TableuCardPile.of(0),
-          TableuCardPile.of(
+          TableauCardPile.of(0),
+          TableauCardPile.of(
               4,
               Card.of(Card.Suit.HEARTS, Card.Rank.TEN),
               Card.of(Card.Suit.CLUBS, Card.Rank.NINE),
               Card.of(Card.Suit.HEARTS, Card.Rank.EIGHT),
               Card.of(Card.Suit.CLUBS, Card.Rank.SEVEN),
               Card.of(Card.Suit.HEARTS, Card.Rank.SIX)),
-          TableuCardPile.of(
+          TableauCardPile.of(
               2,
               Card.of(Card.Suit.SPADES, Card.Rank.EIGHT),
               Card.of(Card.Suit.DIAMONDS, Card.Rank.SEVEN),
@@ -57,6 +57,7 @@ public class TableuTest {
 
   @Test
   public void testInit() throws Exception {
-    System.out.println(new Tableu(Deck.freshDeck()).toString());
+    final Tableau tableau = new Tableau();
+    tableau.init(Deck.freshDeck());
   }
 }

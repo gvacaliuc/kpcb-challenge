@@ -2,7 +2,6 @@ package com.github.gvacaliuc.solitaire.model;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Queues;
-
 import java.util.Deque;
 import java.util.Optional;
 

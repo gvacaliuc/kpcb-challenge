@@ -1,21 +1,20 @@
 package com.github.gvacaliuc.solitaire.model;
 
 import com.google.common.collect.Queues;
-
 import java.util.Arrays;
 import java.util.Deque;
 import java.util.Optional;
 
-/** Represents a card pile in the Tableu. */
-public class TableuCardPile extends AbstractCardPile {
+/** Represents a card pile in the Tableau. */
+public class TableauCardPile extends AbstractCardPile {
 
-  public TableuCardPile(Deque<Card> cards, int numVisible) {
-    this.cardStack = cards;
+  public TableauCardPile(Deque<Card> cards, int numVisible) {
+    this.cardStack = Queues.newArrayDeque(cards);
     this.numVisible = numVisible;
   }
 
-  public static TableuCardPile of(int numVisible, Card... cards) {
-    return new TableuCardPile(Queues.newArrayDeque(Arrays.asList(cards)), numVisible);
+  public static TableauCardPile of(int numVisible, Card... cards) {
+    return new TableauCardPile(Queues.newArrayDeque(Arrays.asList(cards)), numVisible);
   }
 
   @Override
@@ -31,7 +30,7 @@ public class TableuCardPile extends AbstractCardPile {
 
   @Override
   protected CardPile newPile(Deque<Card> newCards) {
-    return new TableuCardPile(newCards, newCards.size());
+    return new TableauCardPile(newCards, newCards.size());
   }
 
   @Override
@@ -41,7 +40,7 @@ public class TableuCardPile extends AbstractCardPile {
     for (Card c : newCards) {
       newDeque.addLast(c);
     }
-    return new TableuCardPile(newDeque, visible);
+    return new TableauCardPile(newDeque, visible);
   }
 
   @Override
@@ -95,7 +94,7 @@ public class TableuCardPile extends AbstractCardPile {
 
     copyNumVisible = Math.max(copyNumVisible, 1);
 
-    return Optional.of(new TableuCardPile(copyStack, copyNumVisible));
+    return Optional.of(new TableauCardPile(copyStack, copyNumVisible));
   }
 
   @Override

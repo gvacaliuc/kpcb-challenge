@@ -2,7 +2,6 @@ package com.github.gvacaliuc.solitaire.model;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Queues;
-
 import java.util.Deque;
 import java.util.List;
 import java.util.Optional;
@@ -12,18 +11,18 @@ public class SolitaireBoard {
 
   private Deck deck;
   private Foundation foundation;
-  private Tableu tableu;
+  private Tableau tableau;
 
   public SolitaireBoard() throws Exception {
     foundation = Foundation.makeEmpty();
-    tableu = new Tableu();
-    deck = tableu.init(Deck.freshDeck());
+    tableau = new Tableau();
+    deck = tableau.init(Deck.freshDeck());
   }
 
-  private SolitaireBoard(Deck deck, Foundation foundation, Tableu tableu) {
+  private SolitaireBoard(Deck deck, Foundation foundation, Tableau tableau) {
     this.deck = deck;
     this.foundation = foundation;
-    this.tableu = tableu;
+    this.tableau = tableau;
   }
 
   /**
@@ -32,7 +31,7 @@ public class SolitaireBoard {
    * @return
    */
   public String toString() {
-    return List.of(deck.toString(), foundation.toString(), tableu.toString())
+    return List.of(deck.toString(), foundation.toString(), tableau.toString())
         .stream()
         .collect(Collectors.joining("\n===\n"));
   }
@@ -58,7 +57,7 @@ public class SolitaireBoard {
 
     final Card card = oCard.get();
 
-    return deck.push(card).map(newDeck -> new SolitaireBoard(newDeck, foundation, tableu));
+    return deck.push(card).map(newDeck -> new SolitaireBoard(newDeck, foundation, tableau));
   }
 
   public Optional<SolitaireBoard> talonToTableu(int destPile) {
@@ -69,9 +68,9 @@ public class SolitaireBoard {
 
     final Card card = oCard.get();
 
-    return tableu
+    return tableau
         .pushCards(destPile, Queues.newArrayDeque(Lists.newArrayList(card)))
-        .map(newTableu -> new SolitaireBoard(deck.remove().get(), foundation, newTableu));
+        .map(newTableau -> new SolitaireBoard(deck.remove().get(), foundation, newTableau));
   }
 
   public Optional<SolitaireBoard> talonToFoundation() {
@@ -83,20 +82,20 @@ public class SolitaireBoard {
 
     return foundation
         .pushCard(card)
-        .map(newFoundation -> new SolitaireBoard(deck.remove().get(), newFoundation, tableu));
+        .map(newFoundation -> new SolitaireBoard(deck.remove().get(), newFoundation, tableau));
   }
 
   public Optional<SolitaireBoard> tableuToTableu(int originPile, int destPile) {
 
     // dumb impl - just try to remove all from numVisible down
-    for (int numCards = tableu.getNumVisible(originPile); numCards > 0; numCards--) {
-      Optional<Deque<Card>> cards = tableu.peekPile(originPile, numCards);
+    for (int numCards = tableau.getNumVisible(originPile); numCards > 0; numCards--) {
+      Optional<Deque<Card>> cards = tableau.peekPile(originPile, numCards);
       if (cards.isPresent()) {
         final int numCardsFinal = numCards;
-        Optional<Tableu> newTableu =
-            tableu
+        Optional<Tableau> newTableu =
+            tableau
                 .pushCards(destPile, cards.get())
-                .map(largeTableu -> largeTableu.pullCards(originPile, numCardsFinal).get());
+                .map(largeTableau -> largeTableau.pullCards(originPile, numCardsFinal).get());
         if (newTableu.isPresent())
           return Optional.of(new SolitaireBoard(deck, foundation, newTableu.get()));
       }
@@ -106,7 +105,7 @@ public class SolitaireBoard {
   }
 
   public Optional<SolitaireBoard> tableuToFoundation(int originPile) {
-    Optional<Deque<Card>> oCards = tableu.peekPile(originPile, 1);
+    Optional<Deque<Card>> oCards = tableau.peekPile(originPile, 1);
 
     if (!oCards.isPresent()) return Optional.empty();
 
@@ -116,7 +115,7 @@ public class SolitaireBoard {
         .pushCard(card)
         .map(
             newFoundation ->
-                new SolitaireBoard(deck, newFoundation, tableu.pullCards(originPile, 1).get()));
+                new SolitaireBoard(deck, newFoundation, tableau.pullCards(originPile, 1).get()));
   }
 
   public Optional<SolitaireBoard> restartGame() throws Exception {

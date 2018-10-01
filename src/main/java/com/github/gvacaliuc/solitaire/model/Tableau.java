@@ -7,26 +7,26 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class Tableu {
+public class Tableau {
 
   private static final int NUMBER_OF_TABLEU_PILES = 7;
 
-  private CardPile[] piles = new TableuCardPile[NUMBER_OF_TABLEU_PILES];
+  private CardPile[] piles = new TableauCardPile[NUMBER_OF_TABLEU_PILES];
 
-  private Tableu(CardPile[] piles) {
+  private Tableau(CardPile[] piles) {
     this.piles = piles;
   }
 
-  public Tableu() {}
+  public Tableau() {}
 
-  public static Tableu of(CardPile... cardPiles) {
-    return new Tableu(cardPiles);
+  public static Tableau of(CardPile... cardPiles) {
+    return new Tableau(cardPiles);
   }
 
-  @SuppressWarnings("unchecked")
   public Deck init(Deck deck) throws Deck.EmptyDeckException {
 
-    Deque<Card>[] deques = new Deque[NUMBER_OF_TABLEU_PILES];
+    @SuppressWarnings("unchecked")
+    Deque<Card>[] deques = (Deque<Card>[]) new Deque[NUMBER_OF_TABLEU_PILES];
 
     // Initialize the array.
     for (int i = 0; i < NUMBER_OF_TABLEU_PILES; i++) {
@@ -47,14 +47,14 @@ public class Tableu {
 
     int pileId = 0;
     for (Deque<Card> deque : deques) {
-      piles[pileId] = new TableuCardPile(deque, 1);
+      piles[pileId] = new TableauCardPile(deque, 1);
       pileId++;
     }
 
     return deck;
   }
 
-  public Optional<Tableu> moveCards(int originPile, int destPile, int numCards) {
+  public Optional<Tableau> moveCards(int originPile, int destPile, int numCards) {
     // Can we remove these cards?
     Optional<Deque<Card>> migrants = piles[originPile].peek(numCards);
     if (!migrants.isPresent()) return Optional.empty();
@@ -67,22 +67,22 @@ public class Tableu {
     Optional<CardPile> originRemoved = piles[originPile].remove(numCards);
     if (!originRemoved.isPresent()) return Optional.empty();
 
-    // Create new pile for the new Tableu
+    // Create new pile for the new Tableau
     final CardPile[] newPiles = Arrays.copyOf(piles, piles.length);
     newPiles[originPile] = originRemoved.get();
     newPiles[destPile] = oNewPile.get();
 
-    return Optional.of(new Tableu(newPiles));
+    return Optional.of(new Tableau(newPiles));
   }
 
-  public Optional<Tableu> pushCards(int pile, Deque<Card> cards) {
+  public Optional<Tableau> pushCards(int pile, Deque<Card> cards) {
     return piles[pile]
         .pushPile(cards)
         .map(
             newPile -> {
               CardPile[] pileCopy = Arrays.copyOf(piles, piles.length);
               pileCopy[pile] = newPile;
-              return new Tableu(pileCopy);
+              return new Tableau(pileCopy);
             });
   }
 
@@ -90,14 +90,14 @@ public class Tableu {
     return piles[pile].peek(numCards);
   }
 
-  public Optional<Tableu> pullCards(int pile, int numCards) {
+  public Optional<Tableau> pullCards(int pile, int numCards) {
     return piles[pile]
         .remove(numCards)
         .map(
             newPile -> {
               CardPile[] pileCopy = Arrays.copyOf(piles, piles.length);
               pileCopy[pile] = newPile;
-              return new Tableu(pileCopy);
+              return new Tableau(pileCopy);
             });
   }
 

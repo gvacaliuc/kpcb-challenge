@@ -1,7 +1,6 @@
 package com.github.gvacaliuc.solitaire.model;
 
 import com.google.common.collect.Queues;
-
 import java.util.Deque;
 import java.util.Optional;
 
@@ -11,7 +10,7 @@ public abstract class AbstractCardPile implements CardPile {
   protected int numVisible;
 
   /**
-   * Determines whether two cards are compatible to be stacked.  Bottom is
+   * Determines whether two cards are compatible to be stacked. Bottom is
    *
    * @param base the card to be stacked on
    * @param newCard the card to add
@@ -35,11 +34,10 @@ public abstract class AbstractCardPile implements CardPile {
   public Optional<CardPile> pushPile(Deque<Card> newCards) {
 
     // Don't deal with this case
-    if (newCards.isEmpty())
-      return Optional.empty();
+    if (newCards.isEmpty()) return Optional.empty();
 
     // If we're empty, we only accept a king
-    if (cardStack.isEmpty() ) {
+    if (cardStack.isEmpty()) {
       if (validPileStarter(newCards.getFirst())) {
         return Optional.of(newPile(newCards));
       }

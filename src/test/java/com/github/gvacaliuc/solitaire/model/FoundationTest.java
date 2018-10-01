@@ -1,8 +1,8 @@
 package com.github.gvacaliuc.solitaire.model;
 
-import org.junit.Test;
-
 import static org.junit.Assert.*;
+
+import org.junit.Test;
 
 public class FoundationTest {
 
@@ -14,5 +14,4 @@ public class FoundationTest {
 
   @Test
   public void pullCard() {}
-
 }

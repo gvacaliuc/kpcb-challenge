@@ -1,11 +1,5 @@
 package com.github.gvacaliuc.solitaire.view;
 
-import java.util.Optional;
-import java.util.function.BiFunction;
-import java.util.function.Function;
-import java.util.function.IntFunction;
-import java.util.function.Supplier;
-
 public interface IViewToModelAdapter<ActionResult> {
   ActionResult advanceTalon();
 
@@ -20,4 +14,6 @@ public interface IViewToModelAdapter<ActionResult> {
   ActionResult restartGame();
 
   ActionResult getFailure();
+
+  String getBoardAsString();
 }

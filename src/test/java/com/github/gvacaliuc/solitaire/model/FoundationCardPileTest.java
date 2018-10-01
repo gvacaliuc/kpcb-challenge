@@ -1,14 +1,13 @@
 package com.github.gvacaliuc.solitaire.model;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Queues;
-import org.junit.Test;
-
-import java.util.Deque;
-import java.util.Optional;
-
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+
+import com.google.common.collect.Lists;
+import com.google.common.collect.Queues;
+import java.util.Deque;
+import java.util.Optional;
+import org.junit.Test;
 
 public class FoundationCardPileTest {
 

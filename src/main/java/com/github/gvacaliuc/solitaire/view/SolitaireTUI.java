@@ -3,6 +3,7 @@ package com.github.gvacaliuc.solitaire.view;
 import com.google.common.collect.ImmutableMap;
 
 import java.util.Map;
+import java.util.Scanner;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
@@ -39,38 +40,6 @@ public class SolitaireTUI<ActionResult> {
     }
   }
 
-  static class Pair<T, U> {
-
-    public final T left;
-    public final U right;
-
-    private Pair(final T left, final U right) {
-      this.left = left;
-      this.right = right;
-    }
-
-    public static <T, U> Pair<T, U> of(T left, U right) {
-      return new Pair<T, U>(left, right);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-
-      System.err.println(String.format("Equals called on: %s, %s", toString(), obj.toString()));
-
-      if (!(obj instanceof Pair)) return false;
-
-      Pair pair = (Pair) obj;
-
-      return pair.left == left && pair.right == right;
-    }
-
-    @Override
-    public String toString() {
-      return String.format("Pair(%s, %s)", left.toString(), right.toString());
-    }
-  }
-
   private final Map<SolitaireToken, Map<SolitaireToken, BiFunction<String, String, ActionResult>>>
       actionMap =
           ImmutableMap.of(
@@ -94,6 +63,17 @@ public class SolitaireTUI<ActionResult> {
     this.adapter = adapter;
   }
 
+  public void start() {
+    Scanner inputScanner = new Scanner(System.in);
+
+    while (true) {
+      System.out.println(adapter.getBoardAsString());
+      final String inputLine = inputScanner.nextLine();
+      final ActionResult result = executeCommand(inputLine);
+      System.out.println(result);
+    }
+  }
+
   public ActionResult executeCommand(String inputLine) {
     if (inputLine.trim().isEmpty()) return adapter.advanceTalon();
 
@@ -110,8 +90,6 @@ public class SolitaireTUI<ActionResult> {
 
     final SolitaireToken leftToken = SolitaireToken.match(left);
     final SolitaireToken rightToken = SolitaireToken.match(right);
-
-    System.err.println(String.format("parsed tokens: 1(%s), 2(%s)", left, right));
 
     return actionMap
         .getOrDefault(leftToken, ImmutableMap.of())
