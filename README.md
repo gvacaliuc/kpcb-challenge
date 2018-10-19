@@ -1,4 +1,4 @@
-# KPCB Challenge
+# Solitaire
 
 Please note this project uses JDK10; you may have to manually set your
 `org.gradle.java.home` property to an absolute path of your JDK10 installation
